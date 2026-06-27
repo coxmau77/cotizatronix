@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizatronix</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="navbar fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="assets/images/brand.svg" alt="Cotizatronix" width="28" height="28" class="brand-icon">
+        <span class="brand-text">Cotizatronix</span>
+      </a>
+
+      <div class="d-flex align-items-center gap-2 d-none" id="userSection">
+        <div class="text-end user-info">
+          <div class="user-name" id="userName"></div>
+          <div class="user-email" id="userEmail"></div>
+        </div>
+        <div class="dropdown">
+          <button class="btn icon-btn" data-toggle="dropdown">
+            <img src="assets/icons/gear.svg" alt="Ajustes" width="20" height="20" class="icon-img">
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <button class="dropdown-item d-flex align-items-center gap-2" id="themeToggle">
+              <span id="themeIcon"><img src="assets/icons/moon.svg" alt="Modo oscuro" width="16" height="16" class="icon-img"></span>
+              <span id="themeLabel">Modo oscuro</span>
+            </button>
+            <hr class="dropdown-divider">
+            <button class="dropdown-item d-flex align-items-center gap-2" id="logoutBtn">
+              <img src="assets/icons/logout.svg" alt="Cerrar sesión" width="16" height="16">
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="main-content">
+      <div class="welcome">
+        <h1>Cotizatronix</h1>
+        <p class="text-secondary">Gestioná tus cotizaciones de forma rápida y sencilla</p>
+      </div>
+      <div class="action-cards">
+        <button class="action-card" data-toggle="offcanvas" data-target="#historyOffcanvas">
+          <img src="assets/icons/clock.svg" alt="" width="32" height="32" class="icon-img">
+          <div>
+            <div class="action-label">Ver Historial</div>
+            <div class="action-desc">Cotizaciones creadas</div>
+          </div>
+        </button>
+        <button class="action-card action-card-primary" data-toggle="offcanvas" data-target="#quoteOffcanvas">
+          <img src="assets/icons/document.svg" alt="" width="32" height="32" class="icon-img">
+          <div>
+            <div class="action-label">Nueva Cotización</div>
+            <div class="action-desc">Crear una cotización</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-brand">
+            <img src="assets/images/brand.svg" alt="" width="24" height="24">
+            Cotizatronix
+          </div>
+        </div>
+        <div class="modal-body">
+          <label for="accessKey" class="form-label">Clave de acceso</label>
+          <input type="password" class="form-control" id="accessKey" placeholder="Ingresá tu clave" autocomplete="off">
+          <div class="invalid-feedback" id="loginError">Clave incorrecta</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary w-100" id="loginBtn">Ingresar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-start" id="historyOffcanvas">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Historial</h5>
+      <button class="btn-close" data-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="empty-state">
+        <img src="assets/icons/clock.svg" alt="" width="48" height="48" class="icon-img">
+        <p class="text-secondary">Todavía no hay cotizaciones.<br>Creá una para empezar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-end" id="quoteOffcanvas">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Nueva Cotización</h5>
+      <button class="btn-close" data-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="empty-state">
+        <img src="assets/icons/document.svg" alt="" width="48" height="48" class="icon-img">
+        <p class="text-secondary">Formulario de cotización<br>próximamente.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
