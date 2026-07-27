@@ -1,0 +1,3 @@
+[build]
+  command = "sed -i \"s|__ALLOWED_EMAILS__|$ALLOWED_EMAILS|g\" js/app.js"
+  publish = "."

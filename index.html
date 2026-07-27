@@ -1,123 +1,449 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cotizatronix</title>
-  <link rel="shortcut icon" href="assets/icons/icon-light.svg" type="image/x-icon">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotiza elevatronix</title>
+
+    <link rel="shortcut icon" href="img/icon-light.svg" type="image/x-icon">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
 
-  <nav class="navbar fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="assets/icons/icon-color.svg" alt="Cotizatronix" width="28" height="28" class="brand-icon">
-        <span class="brand-text">Cotizatronix</span>
-      </a>
-
-      <div class="d-flex align-items-center gap-2 d-none" id="userSection">
-        <div class="text-end user-info">
-          <div class="user-name" id="userName"></div>
-          <div class="user-email" id="userEmail"></div>
+    <!-- Fixed Navbar -->
+    <nav class="navbar navbar-dark bg-primary fixed-top shadow-sm">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                <img src="img/icon-light.svg" width="28" height="28" class="d-inline-block align-text-top me-2" alt="">
+                <span id="navbar-brand-name">Cotizatronix</span>
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                <div class="navbar-user-info text-light small text-end" id="navbar-user-info" style="display:none;">
+                    <div id="navbar-name"></div>
+                    <div id="navbar-email" class="navbar-email"></div>
+                </div>
+                <div class="dropdown" id="user-menu" style="display:none;">
+                    <button class="btn btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" title="Menú de usuario">
+                        <i class="bi bi-person-circle"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <button class="dropdown-item" id="btn-toggle-theme">
+                                <i class="bi bi-moon-fill me-2"></i><span id="theme-label">Modo oscuro</span>
+                            </button>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <button class="dropdown-item text-danger" id="btn-logout">
+                                <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="dropdown">
-          <button class="btn icon-btn" data-toggle="dropdown">
-            <img src="assets/icons/gear.svg" alt="Ajustes" width="20" height="20" class="icon-img">
-          </button>
-          <div class="dropdown-menu dropdown-menu-end">
-            <button class="dropdown-item d-flex align-items-center gap-2" id="themeToggle">
-              <span id="themeIcon"><img src="assets/icons/moon.svg" alt="Modo oscuro" width="16" height="16"
-                  class="icon-img"></span>
-              <span id="themeLabel">Modo oscuro</span>
+    </nav>
+
+    <!-- Home View -->
+    <div id="view-home" class="view d-flex align-items-center justify-content-center position-relative">
+        <div class="text-center px-3 d-flex flex-column align-items-center justify-content-center">
+            <img src="img/icon-color.svg" alt="Cotizatronix" width="100" height="100" class="mb-4">
+            <!-- <h1 class="display-4 fw-bold text-brand">Cotizatronix</h1> -->
+            <h1 id="home-company-name" class="display-4 fw-bold text-company">[nombre de la compania]</h1>
+            <p class="text-muted mb-5 fs-5">Generador de cotizaciones profesionales</p>
+            <div class="d-flex flex-column gap-3 align-items-center">
+                <button class="btn btn-primary btn-lg rounded-pill px-5 py-3 shadow" data-bs-target="#offcanvasForm">
+                    <i class="bi bi-plus-circle me-2"></i>Crear Cotización
+                </button>
+                <button class="btn btn-outline-primary btn-lg rounded-pill px-5 py-3"
+                    data-bs-target="#offcanvasHistorial">
+                    <i class="bi bi-clock-history me-2"></i>Ver Historial
+                </button>
+            </div>
+        </div>
+
+        <footer class="position-absolute bottom-0 start-50 translate-middle-x pb-3 px-3 text-center">
+            <small class="d-block text-muted">
+                Cotizatronix © 2026 · Generador de cotizaciones simples y profesionales.
+            </small>
+            <small>
+                <a id="footer-custom-link" href="#" target="_blank" rel="noopener noreferrer"
+                    class="text-decoration-none text-brand fw-semibold">
+                    Pedir cotizador personalizado
+                </a>
+            </small>
+        </footer>
+    </div>
+
+    <!-- Offcanvas: Nueva Cotización (static backdrop) -->
+    <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="offcanvasForm">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title">
+                <i class="bi bi-file-earmark-text me-2"></i>Nueva Cotización
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+
+            <!-- Header: Emisor -->
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom" id="emisor-header">
+                <img id="preview-logo" src="img/icon-color.svg" alt="Logo"
+                    style="width: 48px; height: 48px; object-fit: contain;">
+                <div>
+                    <h5 class="mb-0 fw-bold" id="header-empresa">Mi Empresa S.A.</h5>
+                    <small class="text-muted">
+                        <span id="header-cuit">30-12345678-0</span> &middot;
+                        <span id="header-email">info@miempresa.com.ar</span>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Card: Cliente -->
+            <div class="card mb-3 shadow-sm" data-section="cliente">
+                <div class="card-header d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 fw-semibold">Cliente</h6>
+                    <button class="btn btn-outline-danger btn-sm" data-reset="cliente" title="Reiniciar">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="input-cliente" placeholder="Empresa Cliente"
+                            data-persist="cliente-nombre">
+                        <label for="input-cliente">Empresa Cliente</label>
+                        <div class="invalid-feedback">Ingresá el nombre del cliente.</div>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="input-direccion" placeholder="Planta / Dirección"
+                            data-persist="cliente-direccion">
+                        <label for="input-direccion">Planta / Dirección</label>
+                        <div class="invalid-feedback">Ingresá la dirección o planta.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Metadatos -->
+            <div class="card mb-3 shadow-sm" data-section="metadatos">
+                <div class="card-header d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 fw-semibold">Metadatos</h6>
+                    <button class="btn btn-outline-danger btn-sm" data-reset="metadatos" title="Reiniciar">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="date" class="form-control" id="input-fecha" placeholder="Fecha">
+                                <label for="input-fecha">Fecha</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="input-validez" data-persist="metadatos-validez">
+                                    <option value="7">7 días</option>
+                                    <option value="10">10 días</option>
+                                    <option value="15" selected>15 días</option>
+                                    <option value="20">20 días</option>
+                                    <option value="30">30 días</option>
+                                    <option value="60">60 días</option>
+                                    <option value="90">90 días</option>
+                                </select>
+                                <label for="input-validez">Validez</label>
+                            </div>
+                            <div class="small text-muted mt-1 fst-italic" id="validez-info">
+                                <span id="vencimiento-texto"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Items -->
+            <div class="card mb-3 shadow-sm" data-section="items">
+                <div class="card-header d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 fw-semibold">Items</h6>
+                    <div class="d-flex gap-2 align-items-center">
+                        <div class="btn-group btn-group-sm" id="currency-toggle">
+                            <button class="btn btn-outline-primary active currency-option"
+                                data-currency="ARS">AR$</button>
+                            <button class="btn btn-outline-primary currency-option" data-currency="USD">U$D</button>
+                        </div>
+                        <button class="btn btn-outline-danger btn-sm" data-reset="items" title="Reiniciar">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="items-container"></div>
+                    <button id="btn-agregar-item" class="btn btn-secondary w-100 mb-3" disabled>
+                        + Agregar Item
+                    </button>
+                    <div class="border-top border-2 pt-2">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>Subtotal:</span>
+                            <span id="items-subtotal">AR$ 0,00</span>
+                        </div>
+                        <div class="d-flex justify-content-between small mb-1" id="iva-row-form">
+                            <span>IVA 21%:</span>
+                            <span id="items-iva">AR$ 0,00</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold fs-5">
+                            <span>TOTAL:</span>
+                            <span id="items-total">AR$ 0,00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="btn-generar" class="btn btn-primary btn-lg w-100" disabled>
+                <i class="bi bi-file-earmark-pdf me-2"></i>Generar Cotización PDF
             </button>
-            <hr class="dropdown-divider">
-            <button class="dropdown-item d-flex align-items-center gap-2" id="logoutBtn">
-              <img src="assets/icons/logout.svg" alt="Cerrar sesión" width="16" height="16">
-              Cerrar sesión
-            </button>
-          </div>
+
         </div>
-      </div>
     </div>
-  </nav>
 
-  <main>
-    <div class="main-content">
-      <div class="welcome">
-        <img src="assets/icons/icon-color.svg" alt="">
-        <h1>Cotizatronix</h1>
-        <p class="text-secondary">Gestioná tus cotizaciones de forma rápida y sencilla</p>
-      </div>
-      <div class="action-cards">
-        <button class="action-card" data-toggle="offcanvas" data-target="#historyOffcanvas">
-          <img src="assets/icons/clock.svg" alt="" width="32" height="32" class="icon-img">
-          <div>
-            <div class="action-label">Ver Historial</div>
-            <div class="action-desc">Cotizaciones creadas</div>
-          </div>
-        </button>
-        <button class="action-card action-card-primary" data-toggle="offcanvas" data-target="#quoteOffcanvas">
-          <img src="assets/icons/document.svg" alt="" width="32" height="32" class="icon-img">
-          <div>
-            <div class="action-label">Nueva Cotización</div>
-            <div class="action-desc">Crear una cotización</div>
-          </div>
-        </button>
-      </div>
-    </div>
-  </main>
-
-  <div class="modal fade" id="loginModal">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="modal-brand">
-            <img src="assets/images/brand.svg" alt="" width="24" height="24">
-            Cotizatronix
-          </div>
+    <!-- Offcanvas: Historial -->
+    <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasHistorial">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title">
+                <i class="bi bi-clock-history me-2"></i>Historial
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
         </div>
-        <div class="modal-body">
-          <label for="accessKey" class="form-label">Clave de acceso</label>
-          <input type="password" class="form-control" id="accessKey" placeholder="Ingresá tu clave" autocomplete="off">
-          <div class="invalid-feedback" id="loginError">Clave incorrecta</div>
+        <div class="offcanvas-body">
+            <div class="text-center py-5">
+                <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3 mb-0">No hay cotizaciones guardadas aún.</p>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary w-100" id="loginBtn">Ingresar</button>
+    </div>
+
+    <!-- Modal: Preview Cotización -->
+    <div class="modal fade" tabindex="-1" id="modalPreview">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-earmark-text me-2"></i>Cotización Nº <span id="preview-nro"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="preview-container"></div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-outline-danger btn-sm" id="btn-preview-eliminar">
+                        <i class="bi bi-trash me-1"></i>Eliminar
+                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="button" id="btn_download" class="btn btn-outline-primary btn-sm"
+                            data-bs-dismiss="modal">
+                            <i class="bi bi-cloud-download-fill"></i>
+                            Descargar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <div class="offcanvas offcanvas-start" id="historyOffcanvas">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Historial</h5>
-      <button class="btn-close" data-dismiss="offcanvas"></button>
+    <!-- Modal: Confirmar Reinicio -->
+    <div class="modal fade" id="modalReset" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">¿Reiniciar sección?</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Se perderán los datos ingresados en <strong id="modal-reset-seccion">esta
+                            sección</strong>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-confirmar-reset">Reiniciar</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="offcanvas-body">
-      <div class="empty-state">
-        <img src="assets/icons/clock.svg" alt="" width="48" height="48" class="icon-img">
-        <p class="text-secondary">Todavía no hay cotizaciones.<br>Creá una para empezar.</p>
-      </div>
-    </div>
-  </div>
 
-  <div class="offcanvas offcanvas-end" id="quoteOffcanvas">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">Nueva Cotización</h5>
-      <button class="btn-close" data-dismiss="offcanvas"></button>
+    <!-- Modal: PDF Generado -->
+    <div class="modal fade" id="modalPDF" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Cotización generada</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <p class="fs-5 fw-semibold mb-1 mt-2">¡Listo!</p>
+                    <p class="mb-0">Cotización Nº <strong id="modal-pdf-nro" class="fs-4">0000</strong></p>
+                    <small class="text-muted">El PDF se ha descargado correctamente.</small>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="offcanvas-body">
-      <div class="empty-state">
-        <img src="assets/icons/document.svg" alt="" width="48" height="48" class="icon-img">
-        <p class="text-secondary">Formulario de cotización<br>próximamente.</p>
-      </div>
-    </div>
-  </div>
 
-  <script src="app.js"></script>
+    <!-- Modal: Almacenamiento Lleno -->
+    <div class="modal fade" id="modalStorageFull" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Almacenamiento lleno</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 2rem;"></i>
+                    <p class="mt-2 mb-1">No hay suficiente espacio para guardar m&aacute;s cotizaciones.</p>
+                    <small class="text-muted">Pod&eacute;s liberar espacio eliminando las que ya no necesites desde el
+                        Historial.</small>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn-ir-historial">Ir al Historial</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Login -->
+    <div class="modal fade" id="modalLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title"><i class="bi bi-shield-lock me-2"></i>Acceso</h6>
+                </div>
+                <div class="modal-body">
+                    <p class="small text-muted mb-2">Ingres&aacute; tu nombre y correo autorizado para crear
+                        cotizaciones.</p>
+                    <input type="text" class="form-control mb-2" id="input-login-nombre" placeholder="Tu nombre"
+                        autocomplete="name">
+                    <div class="invalid-feedback" id="login-feedback-nombre">Ingresá tu nombre.</div>
+                    <input type="email" class="form-control" id="input-login-email" placeholder="tu@email.com"
+                        autocomplete="email">
+                    <div class="invalid-feedback" id="login-feedback">Email no autorizado.</div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" id="btn-login">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Email No Autorizado -->
+    <div class="modal fade" id="modalEmailDenied" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Acceso denegado</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 2rem;"></i>
+                    <p class="mt-2 mb-0">El correo no est&aacute; autorizado para generar cotizaciones.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar Eliminar Historial -->
+    <div class="modal fade" id="modalEliminarHistorial" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">¿Eliminar cotización?</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Se eliminar&aacute; la cotizaci&oacute;n <strong id="modal-eliminar-nro">Nº
+                            0000</strong> del historial.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-confirmar-eliminar">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Template (off-screen) -->
+    <div id="pdf-wrapper">
+        <div class="a4-template" id="plantilla-a4">
+
+            <div class="pdf-header">
+                <div class="pdf-logo">
+                    <img id="render-logo" src="" alt="Logo Empresa">
+                </div>
+                <div class="pdf-company-info">
+                    <h2 id="render-empresa">Empresa Emisora</h2>
+                    <p id="render-cuit">CUIT: 00-00000000-0</p>
+                    <p id="render-email">info@empresa.com.ar</p>
+                </div>
+            </div>
+
+            <div class="pdf-meta-box">
+                <div><strong>Cotización Nº:</strong> <span id="render-nro">0001</span></div>
+                <div><strong>Fecha:</strong> <span id="render-fecha">--/--/----</span></div>
+                <div><strong>Validez:</strong> <span id="render-validez">---</span></div>
+            </div>
+
+            <div class="pdf-client-box">
+                <p><strong>Cliente:</strong> <span id="render-cliente">---</span></p>
+                <p><strong>Dirección:</strong> <span id="render-direccion">---</span></p>
+            </div>
+
+            <table class="pdf-table">
+                <thead>
+                    <tr>
+                        <th>Cant.</th>
+                        <th>Descripción</th>
+                        <th class="money">P. Unitario</th>
+                        <th class="money">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="render-items-body"></tbody>
+            </table>
+
+            <div class="pdf-totals clearfix">
+                <div class="pdf-totals-row">
+                    <span>Sub-total:</span>
+                    <span id="render-subtotal">AR$ 0,00</span>
+                </div>
+                <div class="pdf-totals-row" id="iva-row-pdf">
+                    <span>IVA 21%:</span>
+                    <span id="render-iva">AR$ 0,00</span>
+                </div>
+                <div class="pdf-totals-row bold">
+                    <span>TOTAL:</span>
+                    <span id="render-total">AR$ 0,00</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        onerror="this.remove(); var f=document.createElement('script'); f.src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js'; document.body.appendChild(f);"></script>
+    <script src="js/app.js"></script>
 </body>
 
 </html>
